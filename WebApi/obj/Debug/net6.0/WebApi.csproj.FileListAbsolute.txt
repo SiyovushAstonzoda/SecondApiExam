@@ -1,0 +1,6 @@
+C:\Users\Aston\OneDrive\Рабочий стол\Siyovush Astonzoda API Exam 2\WebApi\obj\Debug\net6.0\WebApi.csproj.AssemblyReference.cache
+C:\Users\Aston\OneDrive\Рабочий стол\Siyovush Astonzoda API Exam 2\WebApi\obj\Debug\net6.0\WebApi.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Aston\OneDrive\Рабочий стол\Siyovush Astonzoda API Exam 2\WebApi\obj\Debug\net6.0\WebApi.AssemblyInfoInputs.cache
+C:\Users\Aston\OneDrive\Рабочий стол\Siyovush Astonzoda API Exam 2\WebApi\obj\Debug\net6.0\WebApi.AssemblyInfo.cs
+C:\Users\Aston\OneDrive\Рабочий стол\Siyovush Astonzoda API Exam 2\WebApi\obj\Debug\net6.0\WebApi.csproj.CoreCompileInputs.cache
+C:\Users\Aston\OneDrive\Рабочий стол\Siyovush Astonzoda API Exam 2\WebApi\obj\Debug\net6.0\WebApi.MvcApplicationPartsAssemblyInfo.cache
