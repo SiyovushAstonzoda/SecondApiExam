@@ -17,7 +17,7 @@ public class DepartmentService
     public async Task<Response<List<GetDepartmentsDto>>> GetDepartments()
     {
         await using var connection = _context.CreateConnection();
-        var sql = "select d.Id, d.Name, dm.EmployeeId as ManagerId from Department as d left join department_manager as dm on dm.DepartmentId = d.Id;";
+        var sql = "select d.Id, d.Name, concat (em.FirstName, ' ',em.lastname) as fullname, em.Id FROM department as d Left JOIN department_manager  as dm ON dm.DepartmentId=d.ID Left JOIN employee as em ON em.Id=dm.EmployeeId;";
         var result = await connection.QueryAsync<GetDepartmentsDto>(sql);
         return new Response<List<GetDepartmentsDto>>(result.ToList());
     }
@@ -25,7 +25,7 @@ public class DepartmentService
     public async Task<Response<List<GetDepartmentsDto>>> GetDepartmentById(int id)
     {
         await using var connection = _context.CreateConnection();
-        var sql = "select d.Id, d.Name, dm.EmployeeId as ManagerId from Department as d left join department_manager as dm on dm.DepartmentId = d.Id where Id = {id};";
+        var sql = $"select d.Id, d.Name, concat (em.FirstName, ' ',em.lastname) as fullname, em.Id FROM department as d Left JOIN department_manager  as dm ON dm.DepartmentId=d.ID Left JOIN employee as em ON em.Id=dm.EmployeeId where d.Id = {id};";
         var result = await connection.QueryAsync<GetDepartmentsDto>(sql);
         return new Response<List<GetDepartmentsDto>>(result.ToList());
     }
