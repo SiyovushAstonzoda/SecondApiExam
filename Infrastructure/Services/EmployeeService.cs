@@ -4,9 +4,10 @@ using Domain.Wrapper;
 using Domain.Entities;
 using Domain.Dtos;
 using Infrastructure.DataContext;
+using Infrastructure.ServiceInterfaces;
 namespace Infrastructure.Services;
 
-public class EmployeeService
+public class EmployeeService : IEmployeeService
 {
     private DataContext.DataContext _context;
      public EmployeeService (DataContext.DataContext context)
@@ -17,7 +18,7 @@ public class EmployeeService
     public async Task<Response<List<GetEmployeesDto>>> GetEmployees()
     {
         await using var connection = _context.CreateConnection();
-        var sql = "select e.Id, CONCAT(e.FirstName, ' ', e.LastName) as FullName, de.DepartmentId from Employee as e left join department_employee as de on de.employeeid = e.id;";
+        var sql = "select e.Id, concat(e.FirstName, ' ', e.LastName) as FullName, dm.departmentid as DepartmentId, d.name as DepartmentName FROM employee as e JOIN department as d ON d.id = e.id JOIN department_manager as dm ON dm.employeeid = d.id;";
         var result = await connection.QueryAsync<GetEmployeesDto>(sql);
         return new Response<List<GetEmployeesDto>>(result.ToList());
     }
@@ -25,7 +26,7 @@ public class EmployeeService
     public async Task<Response<List<GetEmployeesDto>>> GetEmployeeById(int id)
     {
         await using var connection = _context.CreateConnection();
-        var sql = "select e.Id, CONCAT(e.FirstName, ' ', e.LastName) as FullName, de.DepartmentId from Employee as e left join department_employee as de on de.employeeid = e.id where Id = {id};";
+        var sql = $"select e.Id, concat(e.FirstName, ' ', e.LastName) as FullName, dm.departmentid as DepartmentId, d.name as DepartmentName FROM employee as e JOIN department as d ON d.id = e.id JOIN department_manager as dm ON dm.employeeid = d.id where e.id = {id};";
         var result = await connection.QueryAsync<GetEmployeesDto>(sql);
         return new Response<List<GetEmployeesDto>>(result.ToList());
     }
@@ -35,8 +36,8 @@ public class EmployeeService
         using var connection = _context.CreateConnection();
         try
         {
-            var sql = "insert into Employee (BirthDate, FirstName, LastName, HireDate, Gender) values (@BirthDate, @FirstName, @LastName, @HireDate, @Gender) returning id;";
-            var result = await connection.ExecuteScalarAsync<int>(sql, new {employee.BirthDate, employee.FirstName, employee.LastName, employee.HireDate, employee.Gender});
+            var sql = "insert into Employee (Id, BirthDate, FirstName, LastName, Gender, HireDate) values (@Id, @BirthDate, @FirstName, @LastName, @Gender, @HireDate) returning Id;";
+            var result = await connection.ExecuteScalarAsync<int>(sql, new {employee.Id, employee.BirthDate, employee.FirstName, employee.LastName, employee.Gender, employee.HireDate});
             employee.Id = result;
             return new Response<Employee>(employee);
         }
@@ -52,8 +53,8 @@ public class EmployeeService
         {
              using var connection = _context.CreateConnection();
         {
-            string sql = $"update Employee set BirthDate = @BirthDate, FirstName = @FirstName, LastName = @LastName, HireDate = @HireDate, Gender = @Gender  where Id = @Id returning Id";
-            var response  = await connection.ExecuteScalarAsync<int>(sql, new{employee.BirthDate, employee.FirstName, employee.LastName, employee.HireDate, employee.Gender, employee.Id});
+            string sql = $"update Employee set Id = @Id, BirthDate = @BirthDate, FirstName = @FirstName, LastName = @LastName, HireDate = @HireDate, Gender = @Gender  where Id = @Id returning Id";
+            var response  = await connection.ExecuteScalarAsync<int>(sql, new{employee.Id, employee.BirthDate, employee.FirstName, employee.LastName, employee.HireDate, employee.Gender});
             employee.Id = response;
             return new Response<Employee>(employee);
         }

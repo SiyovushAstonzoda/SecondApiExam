@@ -3,6 +3,7 @@ using Domain.Entities;
 using Domain.Dtos;
 using Infrastructure.DataContext;
 using Infrastructure.Services;
+using Infrastructure.ServiceInterfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers;
@@ -11,8 +12,8 @@ namespace WebApi.Controllers;
 [Route("api/[controller]")]
 public class EmployeeController : ControllerBase
 {
-    private EmployeeService _employeeService;
-    public EmployeeController(EmployeeService employeeService)
+    private IEmployeeService _employeeService;
+    public EmployeeController(IEmployeeService employeeService)
     {
         _employeeService = employeeService;
     }

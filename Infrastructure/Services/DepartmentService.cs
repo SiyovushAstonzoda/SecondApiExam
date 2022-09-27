@@ -4,9 +4,10 @@ using Domain.Wrapper;
 using Domain.Entities;
 using Domain.Dtos;
 using Infrastructure.DataContext;
+using Infrastructure.ServiceInterfaces;
 namespace Infrastructure.Services;
 
-public class DepartmentService
+public class DepartmentService : IDepartmentService
 {
     private DataContext.DataContext _context;
      public DepartmentService (DataContext.DataContext context)
@@ -17,7 +18,7 @@ public class DepartmentService
     public async Task<Response<List<GetDepartmentsDto>>> GetDepartments()
     {
         await using var connection = _context.CreateConnection();
-        var sql = "select d.Id, d.Name, concat (em.FirstName, ' ',em.lastname) as fullname, em.Id FROM department as d Left JOIN department_manager  as dm ON dm.DepartmentId=d.ID Left JOIN employee as em ON em.Id=dm.EmployeeId;";
+        var sql = "select d.Id, d.Name, dm.EmployeeId as ManagerId, concat (em.FirstName, ' ',em.lastname) as fullname, em.Id FROM department as d Left JOIN department_manager  as dm ON dm.DepartmentId=d.ID Left JOIN employee as em ON em.Id=dm.EmployeeId;";
         var result = await connection.QueryAsync<GetDepartmentsDto>(sql);
         return new Response<List<GetDepartmentsDto>>(result.ToList());
     }
@@ -25,7 +26,7 @@ public class DepartmentService
     public async Task<Response<List<GetDepartmentsDto>>> GetDepartmentById(int id)
     {
         await using var connection = _context.CreateConnection();
-        var sql = $"select d.Id, d.Name, concat (em.FirstName, ' ',em.lastname) as fullname, em.Id FROM department as d Left JOIN department_manager  as dm ON dm.DepartmentId=d.ID Left JOIN employee as em ON em.Id=dm.EmployeeId where d.Id = {id};";
+        var sql = $"select d.Id, d.Name, dm.EmployeeId as ManagerId, concat (em.FirstName, ' ',em.lastname) as fullname, em.Id FROM department as d Left JOIN department_manager  as dm ON dm.DepartmentId=d.ID Left JOIN employee as em ON em.Id=dm.EmployeeId where d.Id = {id};";
         var result = await connection.QueryAsync<GetDepartmentsDto>(sql);
         return new Response<List<GetDepartmentsDto>>(result.ToList());
     }
@@ -35,8 +36,8 @@ public class DepartmentService
         using var connection = _context.CreateConnection();
         try
         {
-            var sql = "insert into Department (Name) values (@Name) returning id;";
-            var result = await connection.ExecuteScalarAsync<int>(sql, new {department.Name});
+            var sql = "insert into Department (Id, Name) values (@Id, @Name) returning id;";
+            var result = await connection.ExecuteScalarAsync<int>(sql, new {department.Id, department.Name});
             department.Id = result;
             return new Response<Department>(department);
         }
@@ -52,8 +53,8 @@ public class DepartmentService
         {
              using var connection = _context.CreateConnection();
         {
-            string sql = $"update Department set Name = @Name where Id = @Id returning Id";
-            var response  = await connection.ExecuteScalarAsync<int>(sql, new{department.Name});
+            string sql = $"update Departments set Id = @Id, Name = @Name where Id = @Id returning Id";
+            var response  = await connection.ExecuteScalarAsync<int>(sql, new{department.Id, department.Name});
             department.Id = response;
             return new Response<Department>(department);
         }

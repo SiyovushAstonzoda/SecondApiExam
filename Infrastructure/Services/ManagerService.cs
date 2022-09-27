@@ -4,9 +4,11 @@ using Domain.Wrapper;
 using Domain.Entities;
 using Domain.Dtos;
 using Infrastructure.DataContext;
+using Infrastructure.ServiceInterfaces;
+
 namespace Infrastructure.Services;
 
-public class ManagerService
+public class ManagerService : IManagerService
 {
     private DataContext.DataContext _context;
      public ManagerService (DataContext.DataContext context)
@@ -17,7 +19,7 @@ public class ManagerService
     public async Task<Response<List<GetManagersDto>>> GetManagers()
     {
         await using var connection = _context.CreateConnection();
-        var sql = "select de.EmployeeId as ManagerId, CONCAT(e.FirstName, ' ', e.LastName) as FullName, de.DepartmentId, de.FromDate, de.ToDate from Employee as e left join department_employee as de on de.employeeid = e.id; select Name as DepartmentName from department;";
+        var sql = "select dm.employeeid as ManagerId ,concat(e.firstname , ' ' , e.lastname) as ManagerFullName ,dm.departmentid , d.name as DepartmentName ,  dm.fromdate , dm.todate FROM department_manager dm JOIN employee e ON e.id = dm.employeeid join department d ON dm.departmentid = d.id ;";
         var result = await connection.QueryAsync<GetManagersDto>(sql);
         return new Response<List<GetManagersDto>>(result.ToList());
     }

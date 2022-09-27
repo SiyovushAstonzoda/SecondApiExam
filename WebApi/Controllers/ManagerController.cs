@@ -3,6 +3,7 @@ using Domain.Entities;
 using Domain.Dtos;
 using Infrastructure.DataContext;
 using Infrastructure.Services;
+using Infrastructure.ServiceInterfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers;
@@ -11,8 +12,8 @@ namespace WebApi.Controllers;
 [Route("api/[controller]")]
 public class ManagerController : ControllerBase
 {
-    private ManagerService _managerService;
-    public ManagerController(ManagerService managerService)
+    private IManagerService _managerService;
+    public ManagerController(IManagerService managerService)
     {
         _managerService = managerService;
     }

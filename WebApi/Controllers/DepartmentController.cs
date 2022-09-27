@@ -3,6 +3,7 @@ using Domain.Entities;
 using Domain.Dtos;
 using Infrastructure.DataContext;
 using Infrastructure.Services;
+using Infrastructure.ServiceInterfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers;
@@ -11,8 +12,8 @@ namespace WebApi.Controllers;
 [Route("api/[controller]")]
 public class DepartmentController : ControllerBase
 {
-    private DepartmentService _departmentService;
-    public DepartmentController(DepartmentService departmentService)
+    private IDepartmentService _departmentService;
+    public DepartmentController(IDepartmentService departmentService)
     {
         _departmentService = departmentService;
     }
