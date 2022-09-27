@@ -1,13 +1,14 @@
 using Infrastructure.DataContext;
 using Infrastructure.Services;
+using Infrastructure.ServiceInterfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddSingleton<DataContext>();
-builder.Services.AddScoped<DepartmentService>();
-builder.Services.AddScoped<EmployeeService>();
-builder.Services.AddScoped<ManagerService>();
+builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<IManagerService, ManagerService>();
 
 
 builder.Services.AddControllers();

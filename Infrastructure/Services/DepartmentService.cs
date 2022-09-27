@@ -36,8 +36,8 @@ public class DepartmentService : IDepartmentService
         using var connection = _context.CreateConnection();
         try
         {
-            var sql = "insert into Department (Id, Name) values (@Id, @Name) returning id;";
-            var result = await connection.ExecuteScalarAsync<int>(sql, new {department.Id, department.Name});
+            var sql = "insert into Department (Name) values (@Name) returning id;";
+            var result = await connection.ExecuteScalarAsync<int>(sql, new {department.Name});
             department.Id = result;
             return new Response<Department>(department);
         }
@@ -53,7 +53,7 @@ public class DepartmentService : IDepartmentService
         {
              using var connection = _context.CreateConnection();
         {
-            string sql = $"update Departments set Id = @Id, Name = @Name where Id = @Id returning Id";
+            string sql = $"update Departments Name = @Name where Id = @Id returning Id";
             var response  = await connection.ExecuteScalarAsync<int>(sql, new{department.Id, department.Name});
             department.Id = response;
             return new Response<Department>(department);

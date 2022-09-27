@@ -36,8 +36,8 @@ public class EmployeeService : IEmployeeService
         using var connection = _context.CreateConnection();
         try
         {
-            var sql = "insert into Employee (Id, BirthDate, FirstName, LastName, Gender, HireDate) values (@Id, @BirthDate, @FirstName, @LastName, @Gender, @HireDate) returning Id;";
-            var result = await connection.ExecuteScalarAsync<int>(sql, new {employee.Id, employee.BirthDate, employee.FirstName, employee.LastName, employee.Gender, employee.HireDate});
+            var sql = "insert into Employee (BirthDate, FirstName, LastName, Gender, HireDate) values (@BirthDate, @FirstName, @LastName, @Gender, @HireDate) returning Id;";
+            var result = await connection.ExecuteScalarAsync<int>(sql, new {employee.BirthDate, employee.FirstName, employee.LastName, employee.Gender, employee.HireDate});
             employee.Id = result;
             return new Response<Employee>(employee);
         }
@@ -53,7 +53,7 @@ public class EmployeeService : IEmployeeService
         {
              using var connection = _context.CreateConnection();
         {
-            string sql = $"update Employee set Id = @Id, BirthDate = @BirthDate, FirstName = @FirstName, LastName = @LastName, HireDate = @HireDate, Gender = @Gender  where Id = @Id returning Id";
+            string sql = $"update Employee set BirthDate = @BirthDate, FirstName = @FirstName, LastName = @LastName, HireDate = @HireDate, Gender = @Gender  where Id = @Id returning Id";
             var response  = await connection.ExecuteScalarAsync<int>(sql, new{employee.Id, employee.BirthDate, employee.FirstName, employee.LastName, employee.HireDate, employee.Gender});
             employee.Id = response;
             return new Response<Employee>(employee);
