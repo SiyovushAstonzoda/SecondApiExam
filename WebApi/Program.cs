@@ -9,6 +9,7 @@ builder.Services.AddSingleton<DataContext>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IManagerService, ManagerService>();
+builder.Services.AddScoped<IFileService, FileService>();
 
 
 builder.Services.AddControllers();
@@ -24,6 +25,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 
